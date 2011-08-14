@@ -182,10 +182,6 @@ End
 		  
 		  store.addEventObserver( self )
 		  reloadEvents()
-		  
-		  dim evt as ALCalendarEvent = store.EventWithUID( "A790603B-AAC0-441D-A305-7391EDF85E2A" )
-		  evt.title = "hello world"
-		  evt.Save
 		End Sub
 	#tag EndEvent
 
