@@ -1,0 +1,178 @@
+Module ALCalendarKit
+Constants
+	kVersion = 2.0
+		The version of ALCalendarKit.
+
+Methods
+	Initialize()
+		Performs any required initialization. You must call this function before using any other of the ALCalendarKit classes or functions.
+
+Properties
+	systemStore as ALCalendarStore
+		The operating system's calendar store, or nil if the operating system doesn't have any built in support for calendars.
+
+
+Class ALCalendarStore
+Methods
+	AddCalendarObserver(observer as ALCalendarObserver)
+		Adds an object to the list of observers for calendar change notifications.
+		The behavior of adding an object more than once is undefined.
+
+	AddEventObserver(observer as ALCalendarEventObserver)
+		Adds an object to the list of observers for event change notifications.
+		The behavior of adding an object more than once is undefined.
+
+	AddTaskObserver(observer as ALCalendarTaskObserver)
+		Adds an object to the list of observers for task change notifications.
+		The behavior of adding an object more than once is undefined.
+
+	Calendars() As ALCalendar()
+		Returns all of this store's calendars.
+
+	CalendarWithUID(uid as string) As ALCalendar
+		Gets a calendar by it's unique identifier. Returns nil if there is no calendar with that ID.
+	  
+	CreateCalendar() As ALCalendar
+		Creates a new calendar in this store.  
+
+	Events(startDate as Date, endDate as Date) As ALCalendarEvent()
+		Returns all of the events in all the calendars that occur in a certain time range.
+		Note that only spans less than four years are supported. If you specify a range of more than four years,
+		your results WILL only span four years.
+
+	EventWithUID(uid as string, occurrence as Date = nil) As ALCalendarEvent
+		Gets an event by it's unique identifier. Returns nil if there is no event with that ID.
+		Occurrence should only be passed if the event is recurring.
+
+	RemoveCalendarObserver(observer as ALCalendarObserver)
+		Removes an object to the list of observers for calendar change notifications.
+	
+	RemoveEventObserver(observer as ALCalendarEventObserver)
+		Removes an object to the list of observers for event change notifications.
+
+	RemoveTaskObserver(observer as ALCalendarTaskObserver)
+		Removes an object to the list of observers for task change notifications.
+	
+	TaskWithUID(uid as string) As ALCalendarTask
+		Gets a task by it's unique identifier. Returns nil if there is no task with that ID.	
+
+
+Class ALCalendar
+Methods
+	CreateEvent() as ALCalendarEvent
+		Creates a new event in this calendar.
+	  
+	CreateTask() As ALCalendarTask
+		Creates a new task in this calendar.
+	  
+	Delete()
+		Deletes this calendar and all of its items.
+
+	Events(startDate as Date, endDate as Date) As ALCalendarEvent()
+		Returns all of the events in the calendar that occur in a certain time range.
+		Note that only spans less than four years are supported. If you specify a range of more than four years, your results WILL be truncated to the four years.
+
+	Save()
+		Saves all changes made to this Calendar.
+	  
+	Tasks() As ALCalendarTask()
+		Returns all tasks on this calendar.
+
+	Update()
+		Updates this calendar to the version in the store. If there is no version in the store, the behavior is undefined.
+		Note that this has the side effect of reverting any changes made to this calendar.
+  
+Properties
+	isEditable as boolean
+		Determines if this calendar is editable. The behavior when editing a read-only calendar is undefined.
+
+	store as ALCalendarStore
+		The store that this calendar belongs to.
+
+	title as string
+		The calendar's name.
+
+	uid as string
+		A unique identifier for this calendar. Note that this is only unique per calendar store.
+
+
+Class ALCalendarItem
+Methods
+	Delete()
+		Deletes this calendar item.
+	  
+	Save()
+		Saves all changes to this item.
+	  
+	Update()
+		Updates this item to the version in the store.
+		Note that this has the side effect of reverting any changes made to this item.
+
+Properties
+	calendar As ALCalendar
+		The calendar this item belongs to. Note that assigning a calendar from one store to another is currently unsupported.
+
+	modificationDate As Date
+		The date this item was last modified.
+
+	notes As string
+		Any user-defined notes this item may have.
+
+	store As ALCalendarStore
+		The calendr store that this item belongs to.
+
+	title As string
+		The title of this item.
+
+	uid As string
+		The unique identifier of this item. Note that this is unique only per calendar store.
+
+	url As string
+		The url related to this item.
+
+
+Class ALCalendarEvent inherits ALCalendarItem
+Properties
+	endDate As Date
+		The day that this event ends.
+	
+	isAllDay As boolean
+		Does this event last all day?
+
+	location As string
+		The location this event takes place.
+	
+	occurrence As Date
+		The specific occurrence of this event. This is used for recurring events.
+	
+	startDate As Date
+		The day this event starts on.
+
+
+Class ALCalendarTask inherits ALCalendarItem
+Constants
+	kPriorityNone = 0
+		This item has no priority set.
+	
+	kPriorityLow = 1
+		This item has low priority.
+	
+	kPriorityMedium = 5
+		This item has a medium priority.
+	
+	kPriorityHigh = 9
+		This item has a high priority.
+
+Properties
+	completionDate As Date
+		The date this item was completed. Nil if this item has not been completed.
+
+	dueDate As Date
+		The date this item is due to be completed.
+
+	isCompleted As Boolean
+		Has this item been completed? If you set this to true, dueDate gets set to now.
+	
+	priority As Integer
+		The priority of this task. Use the priority constants to set this.
+	
